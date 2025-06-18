@@ -1,1 +1,1 @@
-web: python -m gunicorn Website.myproject.myproject.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --log-level=info
+web: /bin/bash -c 'chmod +x start.sh && ./start.sh'

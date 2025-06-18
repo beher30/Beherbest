@@ -36,4 +36,13 @@ python manage.py collectstatic --noinput --clear
 # Start Gunicorn
 echo "\n=== Starting Gunicorn ==="
 echo "Using PORT: $PORT"
-exec python -m gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --log-level=debug
+
+# Ensure we have the correct Python path
+export PYTHONPATH=$PYTHONPATH:$(pwd)
+
+# Debug: Show Python path and Gunicorn location
+echo "Python path: $PYTHONPATH"
+which gunicorn || echo "Gunicorn not found in PATH"
+
+# Start Gunicorn with the correct module path
+exec gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --log-level=debug --chdir .

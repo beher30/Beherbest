@@ -8,6 +8,7 @@ python-dotenv==1.0.0
 django-cors-headers==4.1.0
 django-storages==1.13.2
 boto3==1.26.0
+gunicorn==21.2.0  # Required for production WSGI server
 gunicorn==21.2.0
 whitenoise==6.4.0
 django-cleanup==7.0.0
