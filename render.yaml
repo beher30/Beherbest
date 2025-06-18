@@ -3,8 +3,14 @@ services:
     name: beherbest
     runtime: python
     buildCommand: ./build.sh
-    startCommand: cd Website/myproject && gunicorn myproject.wsgi:application
+    startCommand: ./start.sh
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.16
+      - key: PYTHONUNBUFFERED
+        value: true
+      - key: PYTHONDONTWRITEBYTECODE
+        value: 1
       - key: DEBUG
         value: false
       - key: ALLOWED_HOSTS
