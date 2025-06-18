@@ -1,1 +1,1 @@
-web: cd Website/myproject && python -m pip install gunicorn && python -m gunicorn myproject.wsgi:application
+web: cd Website/myproject && pip install -r requirements.txt && python -m gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT --workers 4
