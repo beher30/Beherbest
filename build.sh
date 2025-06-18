@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
-# exit on error
-set -o errexit
+# Exit on error and print commands as they are executed
+set -ex
 
 # Install Python dependencies
+pip install --upgrade pip
 pip install -r requirements.txt
 
 # Navigate to the Django project directory
 cd Website/myproject
 
-# Collect static files
-python manage.py collectstatic --no-input
+# Apply database migrations
+echo "Applying migrations..."
+python manage.py migrate --noinput
 
-# Apply migrations
-python manage.py migrate
+# Collect static files
+echo "Collecting static files..."
+python manage.py collectstatic --noinput --clear
+
+echo "Build completed successfully!"

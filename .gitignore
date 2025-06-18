@@ -2,7 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
+*.pyc
+*.pyo
+*.pyd
 .Python
 build/
 develop-eggs/
@@ -31,6 +33,7 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 media/
+staticfiles/
 
 # IDE
 .idea/
@@ -44,14 +47,7 @@ media/
 .env.local
 .env.*.local
 
-# Large files
-ffmpeg/
-*.exe
-*.dll
-*.so
-*.dylib
-
-# Credentials
+# Credentials and sensitive data
 **/credentials/
 **/*.json
 **/*.key
@@ -59,8 +55,18 @@ ffmpeg/
 **/*.p12
 **/*.crt
 **/*.cert
+**/*pem
+**/*key
 
-# Node modules (if any)
+# Large files and binaries
+ffmpeg/
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+
+# Node modules
 node_modules/
 
 # OS generated files
@@ -72,22 +78,13 @@ node_modules/
 ehthumbs.db
 Thumbs.db
 
-# Google Drive related
-**/google_drive_*
-**/gdrive_*
-**/*gdrive*
-**/*google*drive*
-
 # Cache and local files
 .cache/
 .coverage
 htmlcov/
 .pytest_cache/
 .mypy_cache/
-
-# Local development
-local_settings.py
-*.local
+__pycache__/
 
 # Logs
 logs/
@@ -97,69 +94,13 @@ logs/
 *.sqlite3
 *.db
 *.sql
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
 
-# Virtual Environment
-venv/
-env/
-ENV/
-
-# Django
-*.log
+# Local development
 local_settings.py
-db.sqlite3
-db.sqlite3-journal
+*.local
+
+# Media files (user-uploaded content)
 media/
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# Large files
-ffmpeg/
-*.exe
-*.dll
-*.so
-*.dylib
-
-# Node modules (if any)
-node_modules/
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
 
 # Credentials
 **/credentials/
