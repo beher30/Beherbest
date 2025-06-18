@@ -27,3 +27,4 @@ reportlab==4.0.9
 python-ffmpeg-video-streaming==0.1.15
 python-ffmpeg==1.0.0
 dj-database-url==2.0.0
+gunicorn==21.2.0
