@@ -1,0 +1,1 @@
+web: cd Website/myproject && gunicorn myproject.wsgi:application
