@@ -5,9 +5,9 @@ set -e  # Exit on error
 echo "=== Starting deployment script ==="
 echo "Current directory: $(pwd)"
 
-# Navigate to the project directory
-cd "$(dirname "$0")/Website/myproject"
-echo "Changed to directory: $(pwd)"
+# Navigate to the project root directory
+cd "$(dirname "$0")"
+echo "Changed to root directory: $(pwd)"
 
 # Show Python and pip information
 echo "\n=== Python Environment ==="
@@ -16,10 +16,16 @@ python --version
 which pip
 pip --version
 
-# Install requirements
+# Install requirements from root requirements.txt
 echo "\n=== Installing requirements ==="
 pip install --upgrade pip
+echo "Installing from: $(pwd)/requirements.txt"
+cat requirements.txt
 pip install -r requirements.txt
+
+# Navigate to the project directory
+cd "Website/myproject"
+echo "Changed to project directory: $(pwd)"
 
 # Show installed packages
 echo "\n=== Installed packages ==="

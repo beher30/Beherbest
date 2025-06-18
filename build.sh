@@ -2,12 +2,20 @@
 # Exit on error and print commands as they are executed
 set -ex
 
+# Debug information
+echo "=== Build script started ==="
+echo "Current directory: $(pwd)"
+
 # Upgrade pip and install Python build dependencies
 echo "=== Upgrading pip and installing build dependencies ==="
 python -m pip install --upgrade pip
 pip install --upgrade setuptools wheel
 
-# Install requirements
+# Install requirements from root requirements.txt
+echo "=== Installing requirements ==="
+echo "Installing from: $(pwd)/requirements.txt"
+cat requirements.txt
+pip install -r requirements.txt
 echo "\n=== Installing Python dependencies ==="
 pip install -r requirements.txt
 
