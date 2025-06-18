@@ -1,1 +1,1 @@
-web: cd Website/myproject && python -m gunicorn myproject.wsgi:application
+web: cd Website/myproject && python -m pip install --user gunicorn && ~/.local/bin/gunicorn myproject.wsgi:application
