@@ -4,6 +4,7 @@ set -ex
 
 # Install Python dependencies
 pip install --upgrade pip
+pip install gunicorn
 pip install -r requirements.txt
 
 # Navigate to the Django project directory
