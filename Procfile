@@ -1,1 +1,1 @@
-web: chmod +x start.sh && ./start.sh
+web: /bin/bash -c 'chmod +x start.sh && ./start.sh'

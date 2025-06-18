@@ -1,27 +1,39 @@
 #!/bin/bash
+set -e  # Exit on error
+
+# Debug information
+echo "=== Starting deployment script ==="
+echo "Current directory: $(pwd)"
 
 # Navigate to the project directory
 cd "$(dirname "$0")/Website/myproject"
+echo "Changed to directory: $(pwd)"
+
+# Show Python and pip information
+echo "\n=== Python Environment ==="
+which python
+python --version
+which pip
+pip --version
 
 # Install requirements
-echo "Installing requirements..."
+echo "\n=== Installing requirements ==="
+pip install --upgrade pip
 pip install -r requirements.txt
 
-# Show environment information
-echo "Current directory: $(pwd)"
-echo "Python version: $(python --version)"
-echo "Pip version: $(pip --version)"
-echo "Installed packages:"
+# Show installed packages
+echo "\n=== Installed packages ==="
 pip list
 
 # Run migrations
-echo "Running migrations..."
+echo "\n=== Running migrations ==="
 python manage.py migrate --noinput
 
 # Collect static files
-echo "Collecting static files..."
+echo "\n=== Collecting static files ==="
 python manage.py collectstatic --noinput --clear
 
 # Start Gunicorn
-echo "Starting Gunicorn..."
+echo "\n=== Starting Gunicorn ==="
+echo "Using PORT: $PORT"
 exec python -m gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --log-level=debug
