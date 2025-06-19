@@ -33,14 +33,23 @@ python -m pip install --upgrade pip
 echo -e "\n=== Installing build dependencies ==="
 pip install --upgrade setuptools wheel
 
-# Install requirements
-echo -e "\n=== Installing requirements ==="
-echo "Installing from: $(pwd)/requirements.txt"
-pip install -r requirements.txt --no-cache-dir
+# Install Django first to ensure it's available
+pip install Django==4.2.0
+
+# Install requirements from the correct location
+REQUIREMENTS_FILE="$PWD/Website/requirements.txt"
+if [ -f "$REQUIREMENTS_FILE" ]; then
+    echo -e "\n=== Installing requirements from $REQUIREMENTS_FILE ==="
+    pip install -r "$REQUIREMENTS_FILE" --no-cache-dir
+else
+    echo -e "\n=== Requirements file not found at $REQUIREMENTS_FILE, using root requirements.txt ==="
+    pip install -r "$PWD/requirements.txt" --no-cache-dir
+fi
 
 # Verify Django installation
-echo -e "\n=== Verifying Django installation ==="
+echo -e "\n=== Verifying installations ==="
 python -c "import django; print(f'Django version: {django.__version__}')"
+pip list
 
 # Show installed packages for debugging
 echo -e "\n=== Installed packages ==="

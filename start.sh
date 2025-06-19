@@ -31,17 +31,43 @@ source venv/bin/activate
 echo -e "\n=== Ensuring pip is up to date ==="
 python -m pip install --upgrade pip
 
-# Always install requirements to ensure all dependencies are present
-echo -e "\n=== Installing Python dependencies ==="
-pip install -r requirements.txt --no-cache-dir
+# Install build dependencies
+echo -e "\n=== Installing build dependencies ==="
+pip install --upgrade setuptools wheel
 
-# Verify Django installation
-echo -e "\n=== Verifying Django installation ==="
+# Install Django first to ensure it's available
+echo -e "\n=== Installing Django ==="
+pip install Django==4.2.0
+
+# Install requirements from the correct location
+REQUIREMENTS_FILE="$PWD/Website/requirements.txt"
+if [ -f "$REQUIREMENTS_FILE" ]; then
+    echo -e "\n=== Installing requirements from $REQUIREMENTS_FILE ==="
+    pip install -r "$REQUIREMENTS_FILE" --no-cache-dir
+else
+    echo -e "\n=== Requirements file not found at $REQUIREMENTS_FILE, using root requirements.txt ==="
+    pip install -r "$PWD/requirements.txt" --no-cache-dir
+fi
+
+# Verify installations
+echo -e "\n=== Verifying installations ==="
 python -c "import django; print(f'Django version: {django.__version__}')"
-
-# Show installed packages for debugging
-echo -e "\n=== Installed packages ==="
 pip list
+
+# Show Python and environment information
+echo -e "\n=== Python Environment ==="
+python --version
+pip --version
+
+# Show current directory and contents
+echo -e "\n=== Current directory contents ==="
+ls -la
+
+# Show Django project structure
+echo -e "\n=== Django project structure ==="
+if [ -d "Website/myproject" ]; then
+    ls -la Website/myproject/
+fi
 
 # Show Python and pip information
 echo "\n=== Python Environment ==="
