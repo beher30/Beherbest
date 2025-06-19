@@ -1,1 +1,1 @@
-web: /bin/bash -c 'chmod +x start.sh && source venv/bin/activate && ./start.sh'
+web: /bin/bash -c 'chmod +x start.sh && source venv/bin/activate && pip install -r requirements.txt --no-cache-dir && python -c "import django; print(f\"Django version: {django.__version__}\")" && ./start.sh'

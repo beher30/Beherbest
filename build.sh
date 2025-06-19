@@ -3,31 +3,44 @@
 set -ex
 
 # Debug information
-echo "=== Build script started ==="
+echo -e "\n=== Build script started ==="
 echo "Current directory: $(pwd)"
-echo "Python version: $(python --version)"
-echo "Pip version: $(pip --version)"
 
-# Create and activate virtual environment if it doesn't exist
+# Set Python path explicitly
+PYTHON_PATH="/opt/render/project/src/.venv/bin/python"
+echo "Using Python path: $PYTHON_PATH"
+
+# Show versions
+echo -e "\n=== Python Environment ==="
+$PYTHON_PATH --version
+$PYTHON_PATH -m pip --version
+
+# Create virtual environment if it doesn't exist
 if [ ! -d "venv" ]; then
-    echo "=== Creating virtual environment ==="
-    python -m venv venv
+    echo -e "\n=== Creating virtual environment ==="
+    $PYTHON_PATH -m venv venv
 fi
 
 # Activate virtual environment
+echo -e "\n=== Activating virtual environment ==="
 source venv/bin/activate
 
 # Ensure pip is up to date
-echo "=== Upgrading pip ==="
+echo -e "\n=== Upgrading pip ==="
 python -m pip install --upgrade pip
 
 # Install wheel and setuptools first
+echo -e "\n=== Installing build dependencies ==="
 pip install --upgrade setuptools wheel
 
-# Install requirements from root requirements.txt
-echo "=== Installing requirements ==="
+# Install requirements
+echo -e "\n=== Installing requirements ==="
 echo "Installing from: $(pwd)/requirements.txt"
 pip install -r requirements.txt --no-cache-dir
+
+# Verify Django installation
+echo -e "\n=== Verifying Django installation ==="
+python -c "import django; print(f'Django version: {django.__version__}')"
 
 # Show installed packages for debugging
 echo -e "\n=== Installed packages ==="

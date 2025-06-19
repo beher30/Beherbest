@@ -9,10 +9,18 @@ echo "Current directory: $(pwd)"
 cd "$(dirname "$0")"
 echo "Changed to root directory: $(pwd)"
 
-# Ensure virtual environment exists
+# Set Python path explicitly
+PYTHON_PATH="/opt/render/project/src/.venv/bin/python"
+PIP_PATH="/opt/render/project/src/.venv/bin/pip"
+
+echo -e "\n=== Python Environment ==="
+$PYTHON_PATH --version
+$PIP_PATH --version
+
+# Create virtual environment if it doesn't exist
 if [ ! -d "venv" ]; then
-    echo -e "\n=== Virtual environment not found, creating one ==="
-    python -m venv venv
+    echo -e "\n=== Creating virtual environment ==="
+    $PYTHON_PATH -m venv venv
 fi
 
 # Activate the virtual environment
@@ -23,16 +31,17 @@ source venv/bin/activate
 echo -e "\n=== Ensuring pip is up to date ==="
 python -m pip install --upgrade pip
 
-# Install requirements if not already installed
-echo -e "\n=== Checking Python dependencies ==="
-if ! pip list | grep -q "Django"; then
-    echo "Dependencies not found. Installing from requirements.txt..."
-    pip install -r requirements.txt --no-cache-dir
-    echo -e "\n=== Installed packages ==="
-    pip list
-else
-    echo "Dependencies already installed."
-fi
+# Always install requirements to ensure all dependencies are present
+echo -e "\n=== Installing Python dependencies ==="
+pip install -r requirements.txt --no-cache-dir
+
+# Verify Django installation
+echo -e "\n=== Verifying Django installation ==="
+python -c "import django; print(f'Django version: {django.__version__}')"
+
+# Show installed packages for debugging
+echo -e "\n=== Installed packages ==="
+pip list
 
 # Show Python and pip information
 echo "\n=== Python Environment ==="
