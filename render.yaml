@@ -3,6 +3,12 @@ services:
     name: beherbest
     env: docker
     dockerfilePath: ./Dockerfile
+    dockerCommand: "gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT"
+    dockerContext: .
+    dockerBuildCommand: |
+      docker build -t beherbest .
+    dockerRunCommand: |
+      docker run --env-file .env -p $PORT:8000 beherbest
     envVars:
       - key: PYTHONUNBUFFERED
         value: "1"
@@ -15,13 +21,15 @@ services:
       - key: CSRF_TRUSTED_ORIGINS
         value: "https://*.onrender.com"
       - key: SECURE_SSL_REDIRECT
-        value: "1"
+        value: "true"
       - key: PYTHONPATH
         value: "/app"
       - key: SESSION_COOKIE_SECURE
-        value: true
+        value: "true"
       - key: CSRF_COOKIE_SECURE
-        value: true
+        value: "true"
+      - key: DJANGO_SETTINGS_MODULE
+        value: "myproject.settings"
       - key: SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION

@@ -16,10 +16,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Copy requirements first to leverage Docker cache
 COPY requirements.txt .
 
-# Install Django first to ensure it's available
+# Install Python dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir Django==4.2.0 && \
     pip install --no-cache-dir -r requirements.txt
@@ -30,8 +30,9 @@ COPY . .
 # Set the correct working directory for the application
 WORKDIR /app/Website/myproject
 
-# Verify Django installation
-RUN python -c "import django; print(f'Django version: {django.__version__}')"
+# Verify Django installation and list installed packages
+RUN python -c "import django; print(f'Django version: {django.__version__}')" && \
+    pip list
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
