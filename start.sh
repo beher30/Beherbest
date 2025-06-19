@@ -2,21 +2,36 @@
 set -e  # Exit on error
 
 # Debug information
-echo "=== Starting deployment script ==="
+echo -e "\n=== Starting deployment script ==="
 echo "Current directory: $(pwd)"
 
 # Navigate to the project root directory
 cd "$(dirname "$0")"
 echo "Changed to root directory: $(pwd)"
 
-# Activate the virtual environment
-if [ -f "venv/bin/activate" ]; then
-    echo "=== Activating virtual environment ==="
-    source venv/bin/activate
-else
-    echo "=== Virtual environment not found, creating one ==="
+# Ensure virtual environment exists
+if [ ! -d "venv" ]; then
+    echo -e "\n=== Virtual environment not found, creating one ==="
     python -m venv venv
-    source venv/bin/activate
+fi
+
+# Activate the virtual environment
+echo -e "\n=== Activating virtual environment ==="
+source venv/bin/activate
+
+# Ensure pip is up to date
+echo -e "\n=== Ensuring pip is up to date ==="
+python -m pip install --upgrade pip
+
+# Install requirements if not already installed
+echo -e "\n=== Checking Python dependencies ==="
+if ! pip list | grep -q "Django"; then
+    echo "Dependencies not found. Installing from requirements.txt..."
+    pip install -r requirements.txt --no-cache-dir
+    echo -e "\n=== Installed packages ==="
+    pip list
+else
+    echo "Dependencies already installed."
 fi
 
 # Show Python and pip information

@@ -17,30 +17,34 @@ fi
 # Activate virtual environment
 source venv/bin/activate
 
-# Upgrade pip and install Python build dependencies
-echo "=== Upgrading pip and installing build dependencies ==="
+# Ensure pip is up to date
+echo "=== Upgrading pip ==="
 python -m pip install --upgrade pip
+
+# Install wheel and setuptools first
 pip install --upgrade setuptools wheel
 
 # Install requirements from root requirements.txt
 echo "=== Installing requirements ==="
 echo "Installing from: $(pwd)/requirements.txt"
-pip install -r requirements.txt
+pip install -r requirements.txt --no-cache-dir
 
 # Show installed packages for debugging
-echo "\n=== Installed packages ==="
+echo -e "\n=== Installed packages ==="
 pip list
-
 # Navigate to the project directory
-echo "\n=== Setting up Django project ==="
+echo -e "\n=== Setting up Django project ==="
 cd Website/myproject
 
 # Run database migrations
-echo "\n=== Running database migrations ==="
+echo -e "\n=== Running database migrations ==="
 python manage.py migrate --noinput
 
 # Collect static files
-echo "\n=== Collecting static files ==="
+echo -e "\n=== Collecting static files ==="
 python manage.py collectstatic --noinput --clear
 
-echo "Build completed successfully!"
+echo -e "\n=== Build completed successfully! ==="
+# Verify Django is installed
+echo -e "\n=== Verifying Django installation ==="
+python -c "import django; print(f'Django version: {django.__version__}')"
