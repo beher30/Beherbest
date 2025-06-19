@@ -1,10 +1,9 @@
 #!/bin/bash
-set -e  # Exit on error
+set -ex
 
 # Debug information
 echo "=== Start Script ==="
 echo "Current directory: $(pwd)"
-echo "Python version: $(python3 --version 2>&1 || echo 'Python not found')"
 
 # Navigate to the project root directory
 cd "$(dirname "$0")"
@@ -16,8 +15,8 @@ source venv/bin/activate
 
 # Show Python and environment information
 echo "\n=== Python Environment ==="
-echo "Python path: $(which python3)"
-echo "Python version: $(python3 --version)"
+echo "Python path: $(which python)"
+echo "Python version: $(python --version)"
 echo "Pip version: $(pip --version)"
 
 # Show installed packages
@@ -37,13 +36,13 @@ echo "\n=== Final environment before starting Gunicorn ==="
 python -c "import sys; print('\n'.join(sys.path))"
 pip list
 
+# Set PYTHONPATH to include the project root
+export PYTHONPATH=$(pwd):$PYTHONPATH
+echo "PYTHONPATH set to: $PYTHONPATH"
+
 # Start Gunicorn
 echo -e "\n=== Starting Gunicorn ==="
 exec gunicorn --bind 0.0.0.0:$PORT myproject.wsgi:application
-
-# Set Python path to include the project root
-export PYTHONPATH=$PYTHONPATH:$(pwd)/..
-echo "Python path set to: $PYTHONPATH"
 
 # Show installed packages
 echo "\n=== Installed packages ==="

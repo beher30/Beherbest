@@ -1,23 +1,26 @@
 #!/bin/bash
-set -e
+set -ex
 
 # Debug information
 echo "=== Build Script ==="
 echo "Current directory: $(pwd)"
-echo "Python version: $(python3 --version 2>&1 || echo 'Python not found')"
 
-# Ensure Python 3.10 is used
-echo -e "\n=== Ensuring Python 3.10 is used ==="
+# Install Python 3.10
+echo -e "\n=== Installing Python 3.10 ==="
 sudo apt-get update
 sudo apt-get install -y python3.10 python3.10-venv python3.10-dev
 
-# Create and activate virtual environment
-echo -e "\n=== Setting up virtual environment ==="
-python3.10 -m venv venv
+# Create virtual environment with Python 3.10
+echo -e "\n=== Creating virtual environment ==="
+/usr/bin/python3.10 -m venv venv
 source venv/bin/activate
 
-# Upgrade pip and install dependencies
-echo -e "\n=== Installing dependencies ==="
+# Show Python version
+echo -e "\n=== Python version ==="
+python --version
+
+# Upgrade pip and install wheel
+echo -e "\n=== Upgrading pip and wheel ==="
 pip install --upgrade pip setuptools wheel
 
 # Install Django first
@@ -25,6 +28,7 @@ echo -e "\n=== Installing Django ==="
 pip install Django==4.2.0
 
 # Install other dependencies
+echo -e "\n=== Installing requirements ==="
 pip install -r requirements.txt
 
 # Verify Django installation
@@ -39,13 +43,13 @@ python -c "import sys; print('\n'.join(sys.path))"
 echo -e "\n=== Installed packages ==="
 pip list
 
-# Show directory structure
-echo -e "\n=== Directory structure ==="
-ls -la
-
 # Navigate to the project directory
 echo -e "\n=== Setting up Django project ==="
 cd Website/myproject
+
+# Show current directory
+echo -e "\n=== Current directory: $(pwd) ==="
+ls -la
 
 # Run database migrations
 echo -e "\n=== Running database migrations ==="
@@ -56,10 +60,8 @@ echo -e "\n=== Collecting static files ==="
 python manage.py collectstatic --noinput --clear
 
 echo -e "\n=== Build completed successfully! ==="
-# Verify Django is installed again
-echo -e "\n=== Verifying Django installation ==="
-python -c "import django; print(f'Django version: {django.__version__}')"
 
-# Show final environment
-echo -e "\n=== Final environment ==="
-pip list"
+# Final verification
+echo -e "\n=== Final verification ==="
+python -c "import django; print(f'Django version: {django.__version__}')"
+pip list
