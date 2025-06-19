@@ -5,26 +5,31 @@ services:
     python:
       version: 3.10.12
     buildCommand: |
-      chmod +x build.sh
-      ./build.sh
+      python -m venv venv
+      source venv/bin/activate
+      pip install --upgrade pip setuptools wheel
+      pip install -r requirements.txt
+      pip install gunicorn
     startCommand: |
-      chmod +x start.sh
-      ./start.sh
+      source venv/bin/activate
+      cd Website/myproject
+      python -c "import django; print(f'Django version: {django.__version__}')"
+      gunicorn myproject.wsgi:application --log-file -
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.12
       - key: PYTHONUNBUFFERED
-        value: true
+        value: "1"
       - key: PYTHONDONTWRITEBYTECODE
-        value: 1
+        value: "1"
       - key: DEBUG
-        value: true
+        value: "true"
       - key: ALLOWED_HOSTS
-        value: .onrender.com,localhost,127.0.0.1
+        value: "*"
       - key: CSRF_TRUSTED_ORIGINS
-        value: https://*.onrender.com
+        value: "https://*.onrender.com"
       - key: SECURE_SSL_REDIRECT
-        value: true
+        value: "true"
       - key: SESSION_COOKIE_SECURE
         value: true
       - key: CSRF_COOKIE_SECURE

@@ -2,62 +2,22 @@
 set -e  # Exit on error
 
 # Debug information
-echo -e "\n=== Starting deployment script ==="
+echo "=== Start Script ==="
 echo "Current directory: $(pwd)"
+echo "Python version: $(python --version 2>&1 || echo 'Python not found')"
 
 # Navigate to the project root directory
 cd "$(dirname "$0")"
 echo "Changed to root directory: $(pwd)"
 
-# Set Python path explicitly
-PYTHON_PATH="/opt/render/project/src/.venv/bin/python"
-PIP_PATH="/opt/render/project/src/.venv/bin/pip"
-
-echo -e "\n=== Python Environment ==="
-$PYTHON_PATH --version
-$PIP_PATH --version
-
-# Create virtual environment if it doesn't exist
-if [ ! -d "venv" ]; then
-    echo -e "\n=== Creating virtual environment ==="
-    $PYTHON_PATH -m venv venv
-fi
-
-# Activate the virtual environment
-echo -e "\n=== Activating virtual environment ==="
+# Create and activate virtual environment
+echo -e "\n=== Setting up virtual environment ==="
+python -m venv venv
 source venv/bin/activate
 
-# Ensure pip is up to date
-echo -e "\n=== Ensuring pip is up to date ==="
-python -m pip install --upgrade pip
-
-# Install build dependencies
-echo -e "\n=== Installing build dependencies ==="
-pip install --upgrade setuptools wheel
-
-# Install Django first to ensure it's available
-echo -e "\n=== Installing Django ==="
-pip install Django==4.2.0
-
-# Install requirements from the correct location
-REQUIREMENTS_FILE="$PWD/Website/requirements.txt"
-if [ -f "$REQUIREMENTS_FILE" ]; then
-    echo -e "\n=== Installing requirements from $REQUIREMENTS_FILE ==="
-    pip install -r "$REQUIREMENTS_FILE" --no-cache-dir
-else
-    echo -e "\n=== Requirements file not found at $REQUIREMENTS_FILE, using root requirements.txt ==="
-    pip install -r "$PWD/requirements.txt" --no-cache-dir
-fi
-
-# Verify installations
-echo -e "\n=== Verifying installations ==="
-python -c "import django; print(f'Django version: {django.__version__}')"
-pip list
-
-# Show Python and environment information
-echo -e "\n=== Python Environment ==="
-python --version
-pip --version
+# Upgrade pip and install dependencies
+echo -e "\n=== Installing dependencies ==="
+pip install --upgrade pip setuptools wheel
 
 # Show current directory and contents
 echo -e "\n=== Current directory contents ==="
