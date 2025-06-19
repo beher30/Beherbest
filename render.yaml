@@ -3,12 +3,8 @@ services:
     name: beherbest
     env: docker
     dockerfilePath: ./Dockerfile
-    dockerCommand: "gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT"
     dockerContext: .
-    dockerBuildCommand: |
-      docker build -t beherbest .
-    dockerRunCommand: |
-      docker run --env-file .env -p $PORT:8000 beherbest
+    dockerCommand: "gunicorn --bind 0.0.0.0:$PORT myproject.wsgi:application"
     envVars:
       - key: PYTHONUNBUFFERED
         value: "1"
