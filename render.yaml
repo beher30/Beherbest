@@ -1,23 +1,9 @@
 services:
   - type: web
     name: beherbest
-    runtime: python
-    python:
-      version: 3.10.12
-    buildCommand: |
-      python -m venv venv
-      source venv/bin/activate
-      pip install --upgrade pip setuptools wheel
-      pip install -r requirements.txt
-      pip install gunicorn
-    startCommand: |
-      source venv/bin/activate
-      cd Website/myproject
-      python -c "import django; print(f'Django version: {django.__version__}')"
-      gunicorn myproject.wsgi:application --log-file -
+    env: docker
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.10.12
       - key: PYTHONUNBUFFERED
         value: "1"
       - key: PYTHONDONTWRITEBYTECODE
