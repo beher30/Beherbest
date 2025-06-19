@@ -1,1 +1,1 @@
-web: /bin/bash -c 'chmod +x start.sh && ./start.sh'
+web: /bin/bash -c 'chmod +x start.sh && source venv/bin/activate && ./start.sh'

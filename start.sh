@@ -9,23 +9,38 @@ echo "Current directory: $(pwd)"
 cd "$(dirname "$0")"
 echo "Changed to root directory: $(pwd)"
 
+# Activate the virtual environment
+if [ -f "venv/bin/activate" ]; then
+    echo "=== Activating virtual environment ==="
+    source venv/bin/activate
+else
+    echo "=== Virtual environment not found, creating one ==="
+    python -m venv venv
+    source venv/bin/activate
+fi
+
 # Show Python and pip information
 echo "\n=== Python Environment ==="
-which python
-python --version
-which pip
-pip --version
+echo "Python path: $(which python)"
+echo "Python version: $(python --version)"
+echo "Pip version: $(pip --version)"
 
 # Install requirements from root requirements.txt
 echo "\n=== Installing requirements ==="
 pip install --upgrade pip
-echo "Installing from: $(pwd)/requirements.txt"
-cat requirements.txt
 pip install -r requirements.txt
+
+# Show installed packages for debugging
+echo "\n=== Installed packages ==="
+pip list
 
 # Navigate to the project directory
 cd "Website/myproject"
-echo "Changed to project directory: $(pwd)"
+echo "\n=== Changed to project directory: $(pwd) ==="
+
+# Set Python path to include the project root
+export PYTHONPATH=$PYTHONPATH:$(pwd)/..
+echo "Python path set to: $PYTHONPATH"
 
 # Show installed packages
 echo "\n=== Installed packages ==="
