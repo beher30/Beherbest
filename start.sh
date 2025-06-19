@@ -4,49 +4,42 @@ set -e  # Exit on error
 # Debug information
 echo "=== Start Script ==="
 echo "Current directory: $(pwd)"
-echo "Python version: $(python --version 2>&1 || echo 'Python not found')"
+echo "Python version: $(python3 --version 2>&1 || echo 'Python not found')"
 
 # Navigate to the project root directory
 cd "$(dirname "$0")"
 echo "Changed to root directory: $(pwd)"
 
-# Create and activate virtual environment
-echo -e "\n=== Setting up virtual environment ==="
-python -m venv venv
+# Activate virtual environment
+echo -e "\n=== Activating virtual environment ==="
 source venv/bin/activate
 
-# Upgrade pip and install dependencies
-echo -e "\n=== Installing dependencies ==="
-pip install --upgrade pip setuptools wheel
-
-# Show current directory and contents
-echo -e "\n=== Current directory contents ==="
-ls -la
-
-# Show Django project structure
-echo -e "\n=== Django project structure ==="
-if [ -d "Website/myproject" ]; then
-    ls -la Website/myproject/
-fi
-
-# Show Python and pip information
+# Show Python and environment information
 echo "\n=== Python Environment ==="
-echo "Python path: $(which python)"
-echo "Python version: $(python --version)"
+echo "Python path: $(which python3)"
+echo "Python version: $(python3 --version)"
 echo "Pip version: $(pip --version)"
 
-# Install requirements from root requirements.txt
-echo "\n=== Installing requirements ==="
-pip install --upgrade pip
-pip install -r requirements.txt
-
-# Show installed packages for debugging
+# Show installed packages
 echo "\n=== Installed packages ==="
 pip list
+
+# Verify Django installation
+echo -e "\n=== Verifying Django installation ==="
+python -c "import django; print(f'Django version: {django.__version__}')"
 
 # Navigate to the project directory
 cd "Website/myproject"
 echo "\n=== Changed to project directory: $(pwd) ==="
+
+# Show final environment
+echo "\n=== Final environment before starting Gunicorn ==="
+python -c "import sys; print('\n'.join(sys.path))"
+pip list
+
+# Start Gunicorn
+echo -e "\n=== Starting Gunicorn ==="
+exec gunicorn --bind 0.0.0.0:$PORT myproject.wsgi:application
 
 # Set Python path to include the project root
 export PYTHONPATH=$PYTHONPATH:$(pwd)/..

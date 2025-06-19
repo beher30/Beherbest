@@ -6,7 +6,8 @@ ENV PYTHONDONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
     DJANGO_SETTINGS_MODULE=myproject.settings \
-    DEBUG=True
+    DEBUG=True \
+    PORT=8000
 
 # Set work directory
 WORKDIR /app
@@ -17,25 +18,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip
-RUN pip install --no-cache-dir --upgrade pip
+# Upgrade pip and setuptools
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Install Django first explicitly
-RUN pip install --no-cache-dir Django==4.2.0
-
-# Copy requirements file
+# Copy setup files first to leverage Docker cache
+COPY setup.py .
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install the package and its dependencies
+RUN pip install --no-cache-dir -e .
 
-# Copy project files
+# Copy the rest of the application
 COPY . .
 
 # Set the correct working directory for the application
 WORKDIR /app/Website/myproject
 
-# Verify installation
+# Verify installation and list installed packages
 RUN python -c "import django; print(f'Django version: {django.__version__}')" && \
     python -c "import sys; print('\n'.join(sys.path))" && \
     pip list
