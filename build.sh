@@ -8,45 +8,41 @@ echo "Current directory: $(pwd)"
 
 # Set Python path explicitly
 PYTHON_PATH="/opt/render/project/src/.venv/bin/python"
+PIP_PATH="/opt/render/project/src/.venv/bin/pip"
+
 echo "Using Python path: $PYTHON_PATH"
 
 # Show versions
 echo -e "\n=== Python Environment ==="
 $PYTHON_PATH --version
-$PYTHON_PATH -m pip --version
+$PIP_PATH --version
 
-# Create virtual environment if it doesn't exist
+# Create and activate virtual environment
+echo -e "\n=== Setting up virtual environment ==="
 if [ ! -d "venv" ]; then
     echo -e "\n=== Creating virtual environment ==="
     $PYTHON_PATH -m venv venv
 fi
-
-# Activate virtual environment
 echo -e "\n=== Activating virtual environment ==="
 source venv/bin/activate
 
 # Ensure pip is up to date
-echo -e "\n=== Upgrading pip ==="
-python -m pip install --upgrade pip
+echo -e "\n=== Upgrading pip and setuptools ==="
+python -m pip install --upgrade pip setuptools wheel
 
-# Install wheel and setuptools first
-echo -e "\n=== Installing build dependencies ==="
-pip install --upgrade setuptools wheel
+# Install the package in development mode
+echo -e "\n=== Installing package in development mode ==="
+pip install -e .
 
 # Install Django first to ensure it's available
+echo -e "\n=== Installing Django ==="
 pip install Django==4.2.0
 
-# Install requirements from the correct location
-REQUIREMENTS_FILE="$PWD/Website/requirements.txt"
-if [ -f "$REQUIREMENTS_FILE" ]; then
-    echo -e "\n=== Installing requirements from $REQUIREMENTS_FILE ==="
-    pip install -r "$REQUIREMENTS_FILE" --no-cache-dir
-else
-    echo -e "\n=== Requirements file not found at $REQUIREMENTS_FILE, using root requirements.txt ==="
-    pip install -r "$PWD/requirements.txt" --no-cache-dir
-fi
+# Install requirements from setup.py
+echo -e "\n=== Installing dependencies from setup.py ==="
+pip install -r requirements.txt
 
-# Verify Django installation
+# Verify installations
 echo -e "\n=== Verifying installations ==="
 python -c "import django; print(f'Django version: {django.__version__}')"
 pip list

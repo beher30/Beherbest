@@ -1,1 +1,1 @@
-web: /bin/bash -c 'chmod +x start.sh && source venv/bin/activate && pip install -r requirements.txt --no-cache-dir && python -c "import django; print(f\"Django version: {django.__version__}\")" && ./start.sh'
+web: /bin/bash -c 'chmod +x start.sh && source venv/bin/activate && cd Website/myproject && python -m pip install -r ../../requirements.txt && python -c "import django; print(f\"Django version: {django.__version__}\")" && gunicorn myproject.wsgi:application'
