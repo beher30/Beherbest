@@ -15,7 +15,9 @@ services:
       - key: CSRF_TRUSTED_ORIGINS
         value: "https://*.onrender.com"
       - key: SECURE_SSL_REDIRECT
-        value: "true"
+        value: "1"
+      - key: PYTHONPATH
+        value: "/app"
       - key: SESSION_COOKIE_SECURE
         value: true
       - key: CSRF_COOKIE_SECURE
