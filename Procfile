@@ -1,1 +1,1 @@
-web: /bin/bash -c 'chmod +x start.sh && source venv/bin/activate && cd Website/myproject && python -m pip install -r ../../requirements.txt && python -c "import django; print(f\"Django version: {django.__version__}\")" && gunicorn myproject.wsgi:application'
+web: gunicorn Website.myproject.wsgi:application --log-file -

@@ -5,49 +5,51 @@ set -ex
 echo "=== Build Script ==="
 echo "Current directory: $(pwd)"
 
-# Install Python 3.10
-echo -e "\n=== Installing Python 3.10 ==="
-sudo apt-get update
-sudo apt-get install -y python3.10 python3.10-venv python3.10-dev
+# Show environment
+echo -e "\n=== Environment ==="
+printenv
 
-# Create virtual environment with Python 3.10
-echo -e "\n=== Creating virtual environment ==="
-/usr/bin/python3.10 -m venv venv
-source venv/bin/activate
-
-# Show Python version
+# Check Python version
 echo -e "\n=== Python version ==="
 python --version
 
-# Upgrade pip and install wheel
-echo -e "\n=== Upgrading pip and wheel ==="
+# Create and activate virtual environment
+echo -e "\n=== Setting up Python environment ==="
+python -m venv venv
+source venv/bin/activate
+
+# Upgrade pip and setuptools
+echo -e "\n=== Upgrading pip and setuptools ==="
 pip install --upgrade pip setuptools wheel
 
-# Install Django first
-echo -e "\n=== Installing Django ==="
-pip install Django==4.2.0
-
-# Install other dependencies
-echo -e "\n=== Installing requirements ==="
+# Install dependencies
+echo -e "\n=== Installing dependencies ==="
 pip install -r requirements.txt
 
-# Verify Django installation
-echo -e "\n=== Verifying Django installation ==="
+# Verify installations
+echo -e "\n=== Verifying installations ==="
 python -c "import django; print(f'Django version: {django.__version__}')"
+python -c "import gunicorn; print(f'Gunicorn version: {gunicorn.__version__}')"
 
-# Show Python path
-echo -e "\n=== Python path ==="
-python -c "import sys; print('\n'.join(sys.path))"
+# Install project in development mode
+echo -e "\n=== Installing project in development mode ==="
+pip install -e .
 
-# Show installed packages
+# Collect static files
+echo -e "\n=== Collecting static files ==="
+python manage.py collectstatic --noinput --clear
+
+# Run database migrations
+echo -e "\n=== Running database migrations ==="
+python manage.py migrate --noinput
+
+# Show installed packages for debugging
 echo -e "\n=== Installed packages ==="
 pip list
 
-# Navigate to the project directory
-echo -e "\n=== Setting up Django project ==="
-cd Website/myproject
-
-# Show current directory
+# Show directory structure
+echo -e "\n=== Current directory structure ==="
+ls -la
 echo -e "\n=== Current directory: $(pwd) ==="
 ls -la
 

@@ -4,49 +4,83 @@ set -ex
 # Debug information
 echo "=== Start Script ==="
 echo "Current directory: $(pwd)"
+echo "Python path: $(which python)"
+echo "Pip version: $(pip --version)"
 
-# Navigate to the project root directory
-cd "$(dirname "$0")"
-echo "Changed to root directory: $(pwd)"
+# Create and activate virtual environment if it doesn't exist
+if [ ! -d "venv" ]; then
+    echo -e "\n=== Creating virtual environment ==="
+    python -m venv venv
+fi
 
-# Activate virtual environment
 echo -e "\n=== Activating virtual environment ==="
 source venv/bin/activate
 
-# Show Python and environment information
-echo "\n=== Python Environment ==="
-echo "Python path: $(which python)"
-echo "Python version: $(python --version)"
-echo "Pip version: $(pip --version)"
+# Upgrade pip and install requirements
+echo -e "\n=== Installing dependencies ==="
+python -m pip install --upgrade pip setuptools wheel
+pip install -r requirements.txt
 
-# Show installed packages
-echo "\n=== Installed packages ==="
-pip list
+# Set environment variables
+export PYTHONPATH="$PWD:$PYTHONPATH"
+export DJANGO_SETTINGS_MODULE="myproject.settings"
+export PYTHONUNBUFFERED=1
+
+# Show environment information
+echo -e "\n=== Environment Information ==="
+python --version
+pip --version
+which python
+which pip
+env | sort
 
 # Verify Django installation
 echo -e "\n=== Verifying Django installation ==="
 python -c "import django; print(f'Django version: {django.__version__}')"
 
 # Navigate to the project directory
-cd "Website/myproject"
-echo "\n=== Changed to project directory: $(pwd) ==="
+echo -e "\n=== Current working directory: $(pwd) ==="
+ls -la
 
-# Show final environment
-echo "\n=== Final environment before starting Gunicorn ==="
-python -c "import sys; print('\n'.join(sys.path))"
-pip list
+# Run database migrations
+echo -e "\n=== Running database migrations ==="
+python manage.py migrate --noinput
 
-# Set PYTHONPATH to include the project root
-export PYTHONPATH=$(pwd):$PYTHONPATH
-echo "PYTHONPATH set to: $PYTHONPATH"
+# Create superuser if it doesn't exist (for development)
+echo -e "\n=== Checking for superuser ==="
+python -c "
+import os, django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
+django.setup()
+from django.contrib.auth import get_user_model
+User = get_user_model()
+if not User.objects.filter(is_superuser=True).exists():
+    print('No superuser found. Creating one...')
+    User.objects.create_superuser('admin', 'admin@example.com', 'admin')
+    print('Superuser created successfully!')
+else:
+    print('Superuser already exists.')
+"
+
+# Collect static files
+echo -e "\n=== Collecting static files ==="
+python manage.py collectstatic --noinput --clear
 
 # Start Gunicorn
 echo -e "\n=== Starting Gunicorn ==="
-exec gunicorn --bind 0.0.0.0:$PORT myproject.wsgi:application
-
-# Show installed packages
-echo "\n=== Installed packages ==="
-pip list
+exec gunicorn \
+    --bind 0.0.0.0:${PORT:-8000} \
+    --workers 3 \
+    --worker-class gthread \
+    --threads 2 \
+    --log-level=info \
+    --log-file=- \
+    --access-logfile=- \
+    --error-logfile=- \
+    --timeout 120 \
+    --max-requests 5000 \
+    --max-requests-jitter 500 \
+    myproject.wsgi:application
 
 # Run migrations
 echo "\n=== Running migrations ==="

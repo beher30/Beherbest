@@ -1,53 +1,38 @@
-# Core dependencies
+# Core Django
 Django==4.2.0
-asgiref==3.7.2
-sqlparse>=0.4.4
+asgiref==3.8.1
+sqlparse==0.4.4
 pytz==2023.3
 
-# Core Django
-django-environ==0.11.2
-
 # Database
-redis==4.5.0
-django-redis==5.3.0
 psycopg2-binary==2.9.9
 
+# Static files
+whitenoise==6.6.0
+
+# Environment
+django-environ==0.11.2
+python-dotenv==1.0.0
+
+# CORS headers
+django-cors-headers==4.3.1
+
 # Storage & Media
-django-storages==1.13.2
-boto3==1.26.0
+django-storages==1.14.2
+boto3==1.34.28
 Pillow==10.0.0
 
-# API & Security
-djangorestframework==3.14.0
-django-cors-headers==4.1.0
+# Production
+gunicorn==21.2.0
+dj-database-url==2.1.0
+
+# Background Tasks (if needed)
+# celery==5.3.4
+# django-celery-results==2.5.1
+
+# Security
 django-csp==3.7
 django-ratelimit==4.1.0
-
-# Background Tasks
-celery==5.3.4
-django-celery-results==2.5.1
-flower==2.0.1
-
-# Development Tools
-django-debug-toolbar==4.2.0
-django-extensions==3.2.3
-ipython==8.12.0
-
-# File Processing
-python-ffmpeg-video-streaming==0.1.15
-python-ffmpeg==1.0.0
-reportlab==4.0.9
-
-# Utilities
-python-dotenv==1.0.0
-django-cleanup==7.0.0
-django-simple-history==3.3.0
-django-filter==23.2
-
-# Mega.nz Integration
-mega.py==1.0.8
-tenacity==5.1.5  # Pinned to be compatible with mega.py
-pycryptodome>=3.9.6,<4.0.0
 
 # Web Server
 gunicorn==21.2.0
