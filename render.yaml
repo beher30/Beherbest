@@ -5,18 +5,17 @@ services:
     python:
       version: 3.10.12
     buildCommand: |
-      chmod +x build.sh
-      ./build.sh
-    startCommand: |
-      chmod +x start.sh
-      ./start.sh
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn myproject.wsgi:application --log-file -
     envVars:
       - key: PYTHON_VERSION
         value: "3.10.12"
       - key: DJANGO_SETTINGS_MODULE
         value: "myproject.settings"
       - key: PYTHONPATH
-        value: "/opt/render/project/src/Website/myproject"
+        value: "/opt/render/project/src/Website"
       - key: PYTHONUNBUFFERED
         value: "1"
       - key: PYTHONDONTWRITEBYTECODE
