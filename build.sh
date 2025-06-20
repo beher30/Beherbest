@@ -15,8 +15,8 @@ python --version
 
 # Create and activate virtual environment
 echo -e "\n=== Setting up Python environment ==="
-python -m venv venv
-source venv/bin/activate
+python -m venv /opt/render/project/src/.venv
+source /opt/render/project/src/.venv/bin/activate
 
 # Upgrade pip and setuptools
 echo -e "\n=== Upgrading pip and setuptools ==="
@@ -32,7 +32,7 @@ python -c "import django; print(f'Django version: {django.__version__}')"
 python -c "import gunicorn; print(f'Gunicorn version: {gunicorn.__version__}')"
 
 # Navigate to the project directory
-cd "Website/myproject"
+cd /opt/render/project/src/Website/myproject
 
 # Install project in development mode
 echo -e "\n=== Installing project in development mode ==="
@@ -65,9 +65,6 @@ pip list
 # Show directory structure
 echo -e "\n=== Current directory structure ==="
 ls -la
-
-# Return to the original directory
-cd ../../
 
 echo -e "\n=== Build completed successfully! ==="
 

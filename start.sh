@@ -4,25 +4,13 @@ set -ex
 # Debug information
 echo "=== Start Script ==="
 echo "Current directory: $(pwd)"
-echo "Python path: $(which python)"
-echo "Pip version: $(pip --version)"
 
-# Create and activate virtual environment if it doesn't exist
-if [ ! -d "venv" ]; then
-    echo -e "\n=== Creating virtual environment ==="
-    python -m venv venv
-fi
-
+# Activate the virtual environment
 echo -e "\n=== Activating virtual environment ==="
-source venv/bin/activate
-
-# Upgrade pip and install requirements
-echo -e "\n=== Installing dependencies ==="
-python -m pip install --upgrade pip setuptools wheel
-pip install -r requirements.txt
+source /opt/render/project/src/.venv/bin/activate
 
 # Set environment variables
-export PYTHONPATH="$PWD:$PYTHONPATH"
+export PYTHONPATH="/opt/render/project/src/Website/myproject:$PYTHONPATH"
 export DJANGO_SETTINGS_MODULE="myproject.settings"
 export PYTHONUNBUFFERED=1
 
@@ -34,19 +22,21 @@ which python
 which pip
 env | sort
 
+# Navigate to the project directory
+echo -e "\n=== Changing to project directory ==="
+cd /opt/render/project/src/Website/myproject
+echo "Current directory: $(pwd)"
+ls -la
+
 # Verify Django installation
 echo -e "\n=== Verifying Django installation ==="
 python -c "import django; print(f'Django version: {django.__version__}')"
-
-# Navigate to the project directory
-echo -e "\n=== Current working directory: $(pwd) ==="
-ls -la
 
 # Run database migrations
 echo -e "\n=== Running database migrations ==="
 python manage.py migrate --noinput
 
-# Create superuser if it doesn't exist (for development)
+# Create superuser if it doesn't exist
 echo -e "\n=== Checking for superuser ==="
 python -c "
 import os, django

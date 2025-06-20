@@ -22,15 +22,15 @@ services:
       - key: PYTHONDONTWRITEBYTECODE
         value: "1"
       - key: DEBUG
-        value: "True"
+        value: "False"  # Set to False in production
       - key: DISABLE_COLLECTSTATIC
-        value: "1"
+        value: "0"  # Enable collectstatic
       - key: SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
         value: "4"
       - key: ALLOWED_HOSTS
-        value: "*"
+        value: "beherbest.onrender.com"
       - key: CSRF_TRUSTED_ORIGINS
         value: "https://beherbest.onrender.com"
       - key: SECURE_SSL_REDIRECT
