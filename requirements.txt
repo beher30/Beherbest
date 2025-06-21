@@ -43,5 +43,11 @@ urllib3>=2.0.4
 six>=1.9.0
 future>=0.18.3
 
+# Core dependencies
+Django>=5.1.6
+gunicorn==21.2.0
+psycopg2-binary==2.9.9
+whitenoise==6.6.0
+
 # Project package (installed in development mode)
 -e .
