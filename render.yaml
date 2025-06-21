@@ -5,11 +5,15 @@ services:
     python:
       version: 3.10.12
     buildCommand: |
-      # Upgrade pip and setuptools
-      pip install --upgrade pip setuptools wheel
+      # Create a minimal requirements.txt if it doesn't exist
+      if [ ! -f requirements.txt ]; then
+          echo "-e ." > requirements.txt
+      fi
       
-      # Install the package in development mode with dependencies
-      # This will use pyproject.toml for dependency resolution
+      # Install Python and build dependencies
+      python -m pip install --upgrade pip setuptools wheel
+      
+      # Install the package in development mode with all dependencies
       pip install -e .
       
       # Install gunicorn explicitly
