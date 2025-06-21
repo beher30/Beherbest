@@ -2,36 +2,45 @@
 # Exit on error
 set -e
 
-# Print environment variables
-echo "=== Environment Variables ==="
-printenv
-echo "============================"
+echo "=== Starting Build Process ==="
 
-# Install Python 3.10 if not already installed
-if ! command -v python3.10 &> /dev/null; then
-    apt-get update && apt-get install -y python3.10 python3.10-venv python3.10-dev
+# Print Python version
+python --version
+
+# Upgrade pip and setuptools
+python -m pip install --upgrade pip setuptools wheel
+
+# Create a minimal requirements.txt if it doesn't exist
+if [ ! -f requirements.txt ]; then
+    echo "Creating minimal requirements.txt..."
+    echo "-e ." > requirements.txt
 fi
 
-# Create and activate virtual environment
-python3.10 -m venv /opt/render/project/src/.venv
-source /opt/render/project/src/.venv/bin/activate
-
-# Ensure pip is up to date
-python -m pip install --upgrade pip
-
-# Install the package in development mode
-pip install -e .
-
-# Install any additional requirements if needed
-if [ -f requirements.txt ]; then
+# Install dependencies from pyproject.toml
+if [ -f pyproject.toml ]; then
+    echo "Installing from pyproject.toml..."
+    pip install -e .
+else
+    echo "pyproject.toml not found, using requirements.txt..."
     pip install -r requirements.txt
 fi
 
-# Install gunicorn
-pip install gunicorn
+# Install gunicorn explicitly
+pip install gunicorn==21.2.0
 
-# Verify Django installation
-python -c "import django; print(f'Django version: {django.__version__}')"
+# Install any additional requirements if they exist
+if [ -f requirements.txt ]; then
+    echo "Installing additional requirements..."
+    pip install -r requirements.txt
+fi
 
-# List installed packages for debugging
+# Run database migrations
+echo "Running migrations..."
+python manage.py migrate
+
+# Collect static files
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
+
+echo "=== Build Process Complete ==="
 pip list

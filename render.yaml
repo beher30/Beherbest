@@ -5,25 +5,11 @@ services:
     python:
       version: 3.10.12
     buildCommand: |
-      # Create a minimal requirements.txt if it doesn't exist
-      if [ ! -f requirements.txt ]; then
-          echo "-e ." > requirements.txt
-      fi
+      # Make the build script executable
+      chmod +x render_build.sh
       
-      # Install Python and build dependencies
-      python -m pip install --upgrade pip setuptools wheel
-      
-      # Install the package in development mode with all dependencies
-      pip install -e .
-      
-      # Install gunicorn explicitly
-      pip install gunicorn==21.2.0
-      
-      # Collect static files
-      python manage.py collectstatic --noinput
-      
-      # Run migrations
-      python manage.py migrate
+      # Run the build script
+      ./render_build.sh
     startCommand: gunicorn myproject.wsgi:application --log-file -
     envVars:
       - key: PYTHON_VERSION
