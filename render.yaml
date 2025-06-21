@@ -9,15 +9,11 @@ services:
       pip install --upgrade pip setuptools wheel
       
       # Install the package in development mode with dependencies
-      pip install .
+      # This will use pyproject.toml for dependency resolution
+      pip install -e .
       
       # Install gunicorn explicitly
       pip install gunicorn==21.2.0
-      
-      # Install any additional requirements if they exist
-      if [ -f requirements.txt ]; then
-          pip install -r requirements.txt
-      fi
       
       # Collect static files
       python manage.py collectstatic --noinput
