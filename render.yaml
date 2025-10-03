@@ -2,18 +2,22 @@ services:
   - type: web
     name: beherbest
     env: python
-    branch: main  # Ensure using main branch
+    region: oregon
+    branch: main
     python:
       version: 3.10.12
     buildCommand: |
-      # Install dependencies
+      echo "Starting build process..."
       pip install --upgrade pip
+      echo "Installing dependencies from requirements.txt"
       pip install -r requirements.txt
-      
-      # Navigate to Django project and build
+      echo "Dependencies installed successfully"
       cd Website/myproject
+      echo "Collecting static files..."
       python manage.py collectstatic --noinput
+      echo "Running migrations..."
       python manage.py migrate
+      echo "Build completed successfully"
     startCommand: cd Website/myproject && gunicorn myproject.wsgi:application --log-file -
     envVars:
       - key: PYTHON_VERSION
