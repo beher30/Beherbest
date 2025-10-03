@@ -52,16 +52,15 @@ services:
       - key: SECURE_PROXY_SSL_HEADER
         value: "HTTP_X_FORWARDED_PROTO,https"
       - key: DATABASE_URL
-        fromDatabase:
-          name: avyevexy_beherbest
-          property: connectionString
+        value: "postgresql://avyevexy_id_rsa:(^LH#c!ihSo,N?(t@localhost:5432/avyevexy_beherbest"
       - key: DATABASE_NAME
         value: "avyevexy_beherbest"
       - key: DATABASE_USER
         value: "avyevexy_id_rsa"
+      - key: DATABASE_PASSWORD
+        value: "(^LH#c!ihSo,N?(t"
+      - key: DATABASE_HOST
+        value: "localhost"  # Update with your Yegara PostgreSQL host
+      - key: DATABASE_PORT
+        value: "5432"
 
-databases:
-  - name: avyevexy_beherbest
-    databaseName: avyevexy_beherbest
-    user: avyevexy_id_rsa
-    plan: free
